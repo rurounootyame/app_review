@@ -4,6 +4,26 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-#ユーザーモデルでプロフィール画像を扱えるようにする記述
-  attachment :profile_image
+  #ユーザーモデルでプロフィール画像を扱えるようにする記述
+  has_one_attached :profile_image
+
+  validates :name, presence: true
+
+  validates :name, uniqueness: true
+
+  validates :name, length: { minimum: 2 }
+  validates :name, length: { maximum: 20 }
+
+  validates :introduction, length: { maximum: 50 }
+
+  def get_profile_image
+    unless profile_image.attached?
+      file_path = Rails.root.join('app/assets/images/default-image.jpg')
+      profile_image.attach(io: File.open(file_path), filename: 'default-image.jpg', content_type: 'image/jpeg')
+    end
+    profile_image.variant(resize_to_limit: [100, 100]).processed
+  end
+
+  has_many :apps, dependent: :destroy
+
 end
