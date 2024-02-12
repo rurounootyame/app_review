@@ -1,0 +1,44 @@
+<main>
+  <% if @app_new.errors.any? %>
+    <%= @app_new.errors.count %>errors prohibited this obj from being saved:
+    <ul>
+    <% @app_new.errors.full_messages.each do |message| %>
+    <li><%= message %></li>
+    <% end %>
+    </ul>
+  <% end %>
+  <div class='container px-5 px-sm-0'>
+    <div class='row'>
+      <div class='col-md-3'>
+        <%= render 'apps', user: @user %>
+        <%= render 'apps2', app_new: @app_new %>
+      </div>
+
+      <div class='col-md-8 offset-md-1'>
+        <h2>Apps</h2>
+        <table class='table table-hover table-inverse'>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Title</th>
+              <th>Opinion</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+         <% @apps.each do |app| %>
+           <td>
+             <%= link_to user_path(app.user) do %>
+              <td><%= image_tag app.user.get_profile_image, size: "100x100" %></td>
+              <td><%= link_to app.title, app_path(app) %></td>
+             <% end %>
+           </td>
+               <th><%= app.body %></th>
+          </tbody>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>

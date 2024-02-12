@@ -10,7 +10,7 @@ class AppsController < ApplicationController
   def show
     @app = App.find(params[:id])
     @user = @app.user
-    @app_new = App.new(profile_image: "default-image.jpg")
+    @app_new = App.new
   end
 
   def create
@@ -18,9 +18,9 @@ class AppsController < ApplicationController
     @user = current_user
     @app_new = App.new(app_params)
     @app_new.user_id = current_user.id
-    if @book_new.save
+    if @app_new.save
       flash[:nitice] = "投稿が完了しました"
-      redirect_to app_path(current_user)
+      redirect_to app_path(@app_new.id)
     else
       render :index
     end
@@ -28,10 +28,17 @@ class AppsController < ApplicationController
 
   def edit
     @app = App.find(params[:id])
+    if @app.user != current_user
+      redirect_to apps_path
+    end
   end
 
   def update
-    @app = App.find(current_user)
+    @app = App.find(params[:id])
+    if @app.update(app_params)
+      flash[:notice] = "編集が完了しました。"
+      redirect_to app_path
+    end
   end
 
   def destroy
